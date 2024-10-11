@@ -51,6 +51,7 @@
 <body>
 <div class="Main">
     <h1>Публикация историй</h1>
+    <code></code>
 
     <p><button onclick="Telegram.WebApp.shareToStory('https://web-app-example.onrender.com/bosslevel.png');">Опубликовать историю</button></p>
     <p><button onclick="Telegram.WebApp.shareToStory('https://stats-sharing-bucket.storage.yandexcloud.net/badges/vk/bosslevel.png');">Тест на S3</button></p>
@@ -67,7 +68,8 @@
 
     }
 
-     document.querySelector("h1").innerHTML = Telegram.WebApp.initData.start_param
+     document.querySelector("h1").innerHTML = Telegram.WebApp.initDataUnsafe.start_param
+     document.querySelector("code").innerHTML = Telegram.WebApp.initDataUnsafe
 
 
 
