@@ -50,13 +50,24 @@
 </head>
 <body>
 <div class="Main">
-    <h1>Тестовое приложение</h1>
+    <h1>Публикация историй</h1>
 
     <p></p>
-    <button id="main_btn" onclick="Telegram.WebApp.shareToStory('https://web-app-example.onrender.com/bosslevel.png');">Share Story»</button>
+    <button onclick="Telegram.WebApp.shareToStory('https://web-app-example.onrender.com/bosslevel.png');">Опубликовать историю</button>
+    <button onclick="foo();">Посмотреть ID</button>
 
 </div>
 
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+<script>
+    function foo() {
+
+            alert(Telegram.WebApp.initData)
+
+    }
+
+</script>
+
 </body>
 </html>
