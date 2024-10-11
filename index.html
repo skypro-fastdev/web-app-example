@@ -12,8 +12,9 @@
         }
 
         body {
-            color: var(--tg-theme-text-color);
-            background: var(--tg-theme-bg-color);
+            color: #fff;
+            font-family: Arial;
+            background-color: #924CF6;
         }
 
         .Main {
@@ -50,8 +51,12 @@
 </head>
 <body>
 <div class="Main">
+
+    <div class="card"></div>
+
     <h1>Публикация историй</h1>
-    <code></code>
+    <div class="code"></div>
+
 
     <p><button onclick="Telegram.WebApp.shareToStory('https://web-app-example.onrender.com/bosslevel.png');">Опубликовать историю</button></p>
     <p><button onclick="Telegram.WebApp.shareToStory('https://stats-sharing-bucket.storage.yandexcloud.net/badges/vk/bosslevel.png');">Тест на S3</button></p>
@@ -68,10 +73,32 @@
 
     }
 
-     document.querySelector("h1").innerHTML = Telegram.WebApp.initDataUnsafe.start_param
-     document.querySelector("code").innerHTML = JSON.stringify(Telegram.WebApp.initDataUnsafe)
 
+    function renderData(badgeData) {
 
+        const template = ` <h1>${badgeData.student_name}</h1><p>${badgeData.description}</p><img src="${badgeData.sharing_card_url}" class="sharing-picture"> `
+        document.querySelector(".card").innerHTML = template
+
+    }
+
+     function fetchData(badgeID){
+
+        fetch('https://sky.pro/share/api/badges/'+badgeID , {
+            method     : 'GET',
+            headers    : {
+                'Content-Type': 'application/json'
+            }
+        }).then(function (response) {
+            return response.json();
+        })
+
+    }
+
+     startParam = Telegram.WebApp.initDataUnsafe.start_param
+     badgeData =  fetchData(startParam)
+     renderData(badgeData)
+
+     document.querySelector(".code").innerHTML = JSON.stringify(Telegram.WebApp.initDataUnsafe)
 
 
 </script>
