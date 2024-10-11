@@ -94,11 +94,19 @@
 
     }
 
-     startParam = Telegram.WebApp.initDataUnsafe.start_param
-     badgeData =  fetchData(startParam)
-     renderData(badgeData)
+    document.querySelector(".code").innerHTML = JSON.stringify(Telegram.WebApp.initDataUnsafe)
 
-     document.querySelector(".code").innerHTML = JSON.stringify(Telegram.WebApp.initDataUnsafe)
+    startParam = Telegram.WebApp.initDataUnsafe.start_param
+
+    alert(startParam)
+
+    badgeData =  fetchData(startParam)
+
+    alert(badgeData)
+
+    renderData(badgeData)
+
+
 
 
 </script>
