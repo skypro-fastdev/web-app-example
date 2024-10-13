@@ -3,110 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            color: #fff;
-            font-family: Arial;
-            background-color: #924CF6;
-        }
-
-        .Main {
-            width: 100%;
-            padding: 25px;
-            text-align: center;
-
-        }
-
-        h1 {
-            margin-top: 40px;
-            margin-bottom: 10px;
-        }
-
-        img {
-            width: 70px;
-            margin: 30px auto;
-        }
-
-        .btn {
-            border: 0;
-            border-radius: 5px;
-            margin-top: 50px;
-            height: 60px;
-            width: 200px;
-            font-style: 20px;
-            font-weight: 500;
-            cursor: pointer;
-            color: var(--tg-theme-button-text-color);
-            background: var(--tg-theme-button-color);
-        }
-
-    </style>
+    <title>Skypro Share Achievement </title>
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
-<div class="Main">
-
-    <div class="card"></div>
-
-    <h1>Публикация историй</h1>
-    <div class="code"></div>
-
-
-    <p><button onclick="Telegram.WebApp.shareToStory('https://web-app-example.onrender.com/bosslevel.png');">Опубликовать историю</button></p>
-    <p><button onclick="Telegram.WebApp.shareToStory('https://stats-sharing-bucket.storage.yandexcloud.net/badges/vk/bosslevel.png');">Тест на S3</button></p>
-    <p><button onclick="foo();">Посмотреть ID</button></p>
+<div class="main">
 
 </div>
 
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
+
 
 <script type="application/javascript">
-    function foo() {
 
-            alert(Telegram.WebApp.initData)
+    function getBadgeID() {
+
+        let startParam = Telegram.WebApp.initDataUnsafe.start_param
+
+        if (!startParam) {
+            startParam="b_2"
+            console.log("Не передан идентификатор бейджа, берем тестовый")
+        }
+        return startParam.replace(/^b_/, '');
 
     }
 
 
     function renderData(badgeData) {
 
-        const template = ` <h1>${badgeData.student_name}</h1><p>${badgeData.description}</p><img src="${badgeData.sharing_card_url}" class="sharing-picture"> `
-        document.querySelector(".card").innerHTML = template
+        const template = `
+            <div class="card badge-card">
+                <p class="badge-card__name">${badgeData.student_name}</p>
+                <h1 class="badge-card__header">${badgeData.title}</h1>
+                <img src="/assets/badges/${badgeData.badge_type}.png" class="sharing-picture">
+                <p class="badge-card__description">${badgeData.description}</p>
+                <p>
+                    <button class="badge-card__button" onclick="Telegram.WebApp.shareToStory('${badgeData.sharing_card_url}');">
+                        Опубликовать историю
+                    </button>
+                </p>
+            </div>
+        `
+
+        document.querySelector(".main").innerHTML = template
 
     }
 
-     function fetchData(badgeID){
+    async function fetchBadgeData(badgeID){
 
-        fetch('https://sky.pro/share/api/badges/'+badgeID , {
-            method     : 'GET',
-            headers    : {
-                'Content-Type': 'application/json'
-            }
-        }).then(function (response) {
-            return response.json();
-        })
+        const url = 'https://sky.pro/share/api/badges/' + badgeID;
 
+        try {
+            const response = await fetch(url)
+            const json = await response.json();
+            return (json)
+
+        } catch (error) {
+
+            console.error(error.message);
+
+        }
     }
 
-    document.querySelector(".code").innerHTML = JSON.stringify(Telegram.WebApp.initDataUnsafe)
+    const badgeID = getBadgeID()
 
-    startParam = Telegram.WebApp.initDataUnsafe.start_param
+    badgeData = fetchBadgeData(badgeID).then((response) => {
 
-    alert(startParam)
+        console.log(`Получена информация по бейджам ${JSON.stringify(response)}`)
+        renderData(response)
 
-    badgeData =  fetchData(startParam)
-
-    alert(badgeData)
-
-    renderData(badgeData)
-
-
+    })
 
 
 </script>
